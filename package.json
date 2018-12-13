@@ -1,10 +1,11 @@
 {
-  "name": "holiday-backend",
+  "name": "userapi",
   "version": "1.0.0",
-  "description": "testApp",
+  "description": "User CRUD nodejs API",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "SET NODE_ENV=dev && nodemon app.js",
+    "test": "mocha --timeout 10000"
   },
   "author": "Nikolay Ivanov",
   "license": "ISC",
@@ -13,5 +14,11 @@
     "express": "^4.16.4",
     "mongoose": "^5.3.15",
     "mongoose-unique-validator": "^2.0.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.18.8"
   }
 }
