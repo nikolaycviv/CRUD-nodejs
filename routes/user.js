@@ -1,15 +1,13 @@
-"use strict";
-
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const user_controller = require("../controllers/user");
+const userController = require('../controllers/user');
 
-router.get("/", user_controller.welcome);
+router.get('/', userController.welcome);
 
-router.get("/users", user_controller.all_users_details);
-router.post("/users", user_controller.user_create);
-router.get("/users/:id", user_controller.user_details);
-router.put("/users/:id", user_controller.user_update);
-router.delete("/users/:id", user_controller.user_delete);
+router.get('/users', userController.allUsersDetails);
+router.post('/users', userController.userCreate);
+router.get('/users/:id', userController.userDetails);
+router.put('/users/:id', userController.userUpdate);
+router.delete('/users/:id', userController.userDelete);
 
 module.exports = router;

@@ -1,13 +1,11 @@
-"use strict";
-
-const User = require("../models/user");
-const chai = require("chai");
-const app = require("../app");
-let chaiHttp = require("chai-http");
+const User = require('../models/user');
+const chai = require('chai');
+const app = require('../app');
+let chaiHttp = require('chai-http');
 let should = chai.should();
 chai.use(chaiHttp);
 
-describe("Users API Calls", () => {
+describe('Users API Calls', () => {
     // Before each test we empty the database
     beforeEach((done) => {
         User.remove({}, (err) => {
@@ -15,13 +13,13 @@ describe("Users API Calls", () => {
         });
     });
 
-    it("Welcome message test", (done) => {
+    it('Welcome message test', (done) => {
         chai.request(app)
-            .get("/")
+            .get('/')
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a("object");
-                res.body.should.have.property("message").eql("Greetings from our great Holiday API!");
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eql('Greetings from our great Holiday API!');
                 done();
             });
     });
@@ -29,12 +27,12 @@ describe("Users API Calls", () => {
     /**
      * Test the /GET all users route
     */
-    it("it should GET all the users", (done) => {
+    it('it should GET all the users', (done) => {
         chai.request(app)
-            .get("/users")
+            .get('/users')
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a("array");
+                res.body.should.be.a('array');
                 res.body.length.should.be.eql(0);
                 done();
             });
@@ -43,22 +41,22 @@ describe("Users API Calls", () => {
     /**
      * Test the /POST route
     */
-    it("it should POST a user", (done) => {
+    it('it should POST a user', (done) => {
         let user = {
-            email: "John.Doe@gmail.com",
-            givenName: "John",
-            familyName: "Doe"
+            email: 'John.Doe@gmail.com',
+            givenName: 'John',
+            familyName: 'Doe'
         };
         chai.request(app)
-            .post("/users")
+            .post('/users')
             .send(user)
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a("object");
-                res.body.should.have.property("message").eql("New user created successfully!");
-                res.body.user.should.have.property("email");
-                res.body.user.should.have.property("givenName");
-                res.body.user.should.have.property("familyName");
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eql('New user created successfully!');
+                res.body.user.should.have.property('email');
+                res.body.user.should.have.property('givenName');
+                res.body.user.should.have.property('familyName');
                 done();
             });
     });
@@ -66,23 +64,23 @@ describe("Users API Calls", () => {
     /**
      * Test the /GET/:id route
     */
-    it("it should GET a user by the given id", done => {
+    it('it should GET a user by the given id', (done) => {
         let user = new User({
-            email: "John.Doe@gmail.com",
-            givenName: "John",
-            familyName: "Doe"
+            email: 'John.Doe@gmail.com',
+            givenName: 'John',
+            familyName: 'Doe'
         });
         user.save((err, user) => {
             chai.request(app)
-                .get("/users/" + user.id)
+                .get(`/users/${user.id}`)
                 .send(user)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a("object");
-                    res.body.should.have.property("email");
-                    res.body.should.have.property("givenName");
-                    res.body.should.have.property("familyName");
-                    res.body.should.have.property("_id").eql(user.id);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('email');
+                    res.body.should.have.property('givenName');
+                    res.body.should.have.property('familyName');
+                    res.body.should.have.property('_id').eql(user.id);
                     done();
                 });
         });
@@ -91,26 +89,26 @@ describe("Users API Calls", () => {
     /**
      * Test the /PUT/:id route
     */
-    it("it should UPDATE a user given the id", done => {
+    it('it should UPDATE a user given the id', (done) => {
         let user = new User({
-            email: "John.Doe@gmail.com",
-            givenName: "John",
-            familyName: "Doe"
+            email: 'John.Doe@gmail.com',
+            givenName: 'John',
+            familyName: 'Doe'
         });
         user.save((err, user) => {
             chai.request(app)
-                .put("/users/" + user.id)
+                .put(`/users/${user.id}`)
                 .send({
-                    email: "john.smith@gmail.com",
-                    givenName: "john",
-                    familyName: "smith"
+                    email: 'john.smith@gmail.com',
+                    givenName: 'john',
+                    familyName: 'smith'
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a("object");
-                    res.body.should.have.property("message").eql("The user is udpated.");
-                    res.body.user.should.have.property("email").eql("john.smith@gmail.com");
-                    res.body.user.should.have.property("familyName").eql("smith");
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('The user is udpated.');
+                    res.body.user.should.have.property('email').eql('john.smith@gmail.com');
+                    res.body.user.should.have.property('familyName').eql('smith');
                     done();
                 });
         });
@@ -119,19 +117,19 @@ describe("Users API Calls", () => {
     /**
      * Test the /DELETE/:id route
     */
-    it("it should DELETE a user given the id", done => {
+    it('it should DELETE a user given the id', (done) => {
         let user = new User({
-            email: "John.Doe@gmail.com",
-            givenName: "John",
-            familyName: "Doe"
+            email: 'John.Doe@gmail.com',
+            givenName: 'John',
+            familyName: 'Doe'
         });
         user.save((err, user) => {
             chai.request(app)
-                .delete("/users/" + user.id)
+                .delete(`/users/${user.id}`)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a("object");
-                    res.body.should.have.property("message").eql("The user is deleted successfully!");
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('The user is deleted successfully!');
                     done();
                 });
         });
