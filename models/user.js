@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 /** User schema
  * 
@@ -10,13 +10,13 @@ const uniqueValidator = require('mongoose-unique-validator');
  * 
  * */
 const UserSchema = new mongoose.Schema({
-    email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true },
+    email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, "is invalid"], index: true },
     givenName: { type: String, required: true, max: 20, index: true },
     familyName: { type: String, required: true, max: 20, index: true }
 }, { timestamps: true });
 
 // added unique: true to e-mail validated via the plugin below
-UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 
 // Export the model
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

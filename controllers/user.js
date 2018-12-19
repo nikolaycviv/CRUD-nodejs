@@ -1,51 +1,43 @@
-'use strict';
+"use strict";
 
-var User = require('../models/user');
+const User = require("../models/user");
 
-//Simple version, without validation or sanitation
-exports.welcome = function (req, res) {
-    res.send('Greetings from our great Holiday API!');
-};
+exports.welcome = (req, res) => {
+    res.json({ message: "Greetings from our great Holiday API!" });
+}
 
-exports.user_create = function (req, res) {
-    var user = new User(
-        {
-            email: req.body.email,
-            givenName: req.body.givenName,
-            familyName: req.body.familyName
-        }
-    );
+exports.user_create = (req, res) => {
+    let user = new User(req.body);
 
-    user.save(function (err) {
-        if(err) res.send(err);
-        res.send('User with e-mail ' + user.email + ' created successfully!')
+    user.save((err, user) => {
+        if (err) res.send(err);
+        res.json({ message: "New user created successfully!", user});
+    })
+}
+exports.all_users_details = (req, res) => {
+    User.find({}, (err, users) => {
+        if (err) res.send(err);
+        res.json(users);
     })
 };
 
-exports.all_users_details = function (req, res) {
-    User.find({}, function (err, users) {
-        if(err) res.send(err);
-        res.send(users);
+exports.user_details = (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        if (err) res.send(err);
+        res.json(user);
     })
 };
 
-exports.user_details = function (req, res) {
-    User.findById(req.params.id, function (err, user) {
-        if(err) res.send(err);
-        res.send(user);
-    })
-};
-
-exports.user_update = function (req, res) {
-    User.findByIdAndUpdate(req.params.id, { $set: req.body }, function (err, user) {
-        if(err) res.send(err);
-        res.send('User with e-mail ' + user.email + ' udpated.');
+exports.user_update = (req, res) => {
+    User.findOneAndUpdate({_id: req.params.id}, { $set: req.body }, {new: true}, (err, user) => {
+        if (err) res.send(err);
+        res.json({ message: "The user is udpated.", user});
     });
 };
 
-exports.user_delete = function (req, res) {
-    User.findByIdAndRemove(req.params.id, function (err, user) {
-        if(err) res.send(err);
-        res.send('User with e-mail ' + user.email + 'deleted successfully!');
-    })
+exports.user_delete = (req, res) => {
+    User.deleteOne({_id: req.params.id}, (err, user) => {
+        if (err) res.send(err);
+        res.json({ message: "The user is deleted successfully!" });
+    });
 };
