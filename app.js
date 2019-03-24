@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 // Set up mongoose connection
 const mongoDB = process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp';
 mongoose.connect(mongoDB, {
+    useFindAndModify: false,
     useCreateIndex: true,
     useNewUrlParser: true
 });

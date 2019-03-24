@@ -5,20 +5,21 @@
   "main": "app.js",
   "scripts": {
     "start": "SET NODE_ENV=dev && nodemon app.js",
-    "test": "mocha --timeout 10000"
+    "test": "nyc mocha --timeout 10000"
   },
   "author": "Nikolay Ivanov",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mongoose": "^5.4.9",
+    "mongoose": "^5.4.19",
     "mongoose-unique-validator": "^2.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^4.2.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.8"
+    "nodemon": "^1.18.10",
+    "nyc": "^13.3.0"
   }
 }

@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 describe('Users API Calls', () => {
     // Before each test we empty the database
     beforeEach((done) => {
-        User.remove({}, (err) => {
+        User.deleteOne({}, (err) => {
             done();
         });
     });
