@@ -1,0 +1,7 @@
+{
+  "signal": "SIGTERM",
+  "events": {
+    "crash": "touch src/app.js"
+  },
+  "delay": "2000"
+}
