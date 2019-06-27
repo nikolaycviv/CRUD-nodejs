@@ -1,5 +1,5 @@
 const User = require('../../src/models/user')
-const chai = require('chai')
+// const chai = require('chai')
 const app = require('../../src/app')
 
 describe('Users API Calls', () => {
