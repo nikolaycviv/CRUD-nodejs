@@ -1,113 +1,90 @@
-const User = require('../../src/models/user')
 // const chai = require('chai')
-const app = require('../../src/app')
+// chai.should()
+const User = require('../../src/models/user')
+const userController = require('../../src/controllers/user')
 
 describe('Users API Calls', () => {
   // Before each test we empty the database
+  let userMock, user
   beforeEach((done) => {
-    User.deleteOne({}, (err) => {
-      done()
-    })
+    userMock = sinon.mock(new User({
+      email: 'John.Doe@gmail.com',
+      givenName: 'John',
+      familyName: 'Doe'
+    }))
+    user = userMock.object
   })
 
-  it('Welcome message test', (done) => {
-    chai.request(app)
-      .get('/')
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.body.should.be.a('object')
-        res.body.should.have.property('message').eql('Greetings from our great Holiday API!')
-        done()
-      })
+  it.skip('Welcome message test', (done) => {
+    // chai.request(app)
+    //   .get('/')
+    //   .end((err, res) => {
+    //     res.should.have.status(200)
+    //     res.body.should.be.a('object')
+    //     res.body.should.have.property('message').eql('Greetings from our great Holiday API!')
+    //     done()
+    //   })
   })
 
   /**
    * Test the /GET all users route
   */
   it('it should GET all the users', (done) => {
-    chai.request(app)
-      .get('/users')
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.body.should.be.a('array')
-        res.body.length.should.be.eql(0)
-        done()
-      })
+    let req = { user }
+    let res = {
+      send: sinon.spy()
+    }
+
+    sinon.spy(userController, 'findAll')
+    userController.findAll(req, res)
+    userController.findAll.calledOnce.should.be.true()
   })
 
   /**
    * Test the /POST route
   */
   it('it should POST a user', (done) => {
-    let user = {
-      email: 'John.Doe@gmail.com',
-      givenName: 'John',
-      familyName: 'Doe'
-    }
-    chai.request(app)
-      .post('/users')
-      .send(user)
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.body.should.be.a('object')
-        res.body.should.have.property('message').eql('New user created successfully!')
-        res.body.user.should.have.property('email')
-        res.body.user.should.have.property('givenName')
-        res.body.user.should.have.property('familyName')
-        done()
-      })
+    let req = { body: { email: 'John.Doe@gmail.com', givenName: 'John', familyName: 'Doe' } }
+    let res = {}
+
+    userMock.expects('save').yields(null, user)
+    user.save({ req, res }, (err, result) => {
+      userMock.verify()
+      userMock.restore()
+      expect(result).to.be.equal(user)
+      done()
+    })
   })
 
   /**
    * Test the /GET/:id route
   */
   it('it should GET a user by the given id', (done) => {
-    let user = new User({
-      email: 'John.Doe@gmail.com',
-      givenName: 'John',
-      familyName: 'Doe'
+    // we expect the findOne method with argument _id and returns the result as note
+    userMock.expects('findOne').withArgs({ _id: 1234 }).yields(null, user)
+
+    // we check the mocked findOne method of User model with _id parameter to be equal to user we set in expectation
+    User.findOne({ _id: 1234 }, (err, result) => {
+      userMock.verify()
+      userMock.restore()
+      expect(result).to.be.deep.equals(user)
     })
-    user.save((err, user) => {
-      chai.request(app)
-        .get(`/users/${user.id}`)
-        .send(user)
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('object')
-          res.body.should.have.property('email')
-          res.body.should.have.property('givenName')
-          res.body.should.have.property('familyName')
-          res.body.should.have.property('_id').eql(user.id)
-          done()
-        })
-    })
+
+    done()
   })
+
+  it('user not saved and throws error')
 
   /**
    * Test the /PUT/:id route
   */
   it('it should UPDATE a user given the id', (done) => {
-    let user = new User({
-      email: 'John.Doe@gmail.com',
-      givenName: 'John',
-      familyName: 'Doe'
-    })
-    user.save((err, user) => {
-      chai.request(app)
-        .put(`/users/${user.id}`)
-        .send({
-          email: 'john.smith@gmail.com',
-          givenName: 'john',
-          familyName: 'smith'
-        })
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('object')
-          res.body.should.have.property('message').eql('The user is udpated.')
-          res.body.user.should.have.property('email').eql('john.smith@gmail.com')
-          res.body.user.should.have.property('familyName').eql('smith')
-          done()
-        })
+    userMock.expects('save').withArgs({ _id: 1234 }).yields(null, 'user')
+
+    user.save({ _id: 1234 }, (err, result) => {
+      userMock.verify()
+      userMock.restore()
+      done()
     })
   })
 
@@ -115,20 +92,11 @@ describe('Users API Calls', () => {
    * Test the /DELETE/:id route
   */
   it('it should DELETE a user given the id', (done) => {
-    let user = new User({
-      email: 'John.Doe@gmail.com',
-      givenName: 'John',
-      familyName: 'Doe'
-    })
-    user.save((err, user) => {
-      chai.request(app)
-        .delete(`/users/${user.id}`)
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('object')
-          res.body.should.have.property('message').eql('The user is deleted successfully!')
-          done()
-        })
+    userMock.expects('remove').withArgs({ _id: 1234 }).yields(null, 'Delete')
+    user.remove({ _id: 1234 }, (err, result) => {
+      userMock.verify()
+      userMock.restore()
+      done()
     })
   })
 })
