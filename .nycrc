@@ -1,0 +1,16 @@
+{
+  "all": true,
+  "reporter": [
+    "html",
+    "text",
+    "json-summary"
+  ],
+  "exclude": [
+    "test/**/*.js",
+    "coverage",
+    "public",
+    "config",
+    "webpack.config.js",
+    "src/app.js"
+  ]
+}

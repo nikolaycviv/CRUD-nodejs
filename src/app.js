@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const port = process.env.PORT || 8080
+const port = 8080
 
 // Imports and sets routes for the users
 const user = require('./routes/user')
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 })
 
 // Set up mongoose connection
-const mongoDB = process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp'
+const mongoDB = 'mongodb://localhost:27017/myapp'
 mongoose.connect(mongoDB, {
   useFindAndModify: false,
   useCreateIndex: true,
