@@ -24,9 +24,10 @@ app.use((req, res, next) => {
 // Set up mongoose connection
 const mongoDB = 'mongodb://localhost:27017/myapp'
 mongoose.connect(mongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   useFindAndModify: false,
-  useCreateIndex: true,
-  useNewUrlParser: true
+  useCreateIndex: true
 })
 // const db = mongoose.connection
 // db.on('error', console.error.bind(console, 'MongoDB connection error:'))

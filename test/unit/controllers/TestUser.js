@@ -1,10 +1,10 @@
 const sinon = require('sinon')
-const sandbox = require('../sandbox')
-const UserModel = require('../../src/models/user')
-// const userController = require('../../src/controllers/user')
+const assert = require('assert')
+const sandbox = require('../../sandbox')
+const UserModel = require('../../../src/models/user')
+const userController = require('../../../src/controllers/user')
 
 describe('Users API Calls', () => {
-  // Before each test we empty the database
   let userMock, user
   beforeEach(() => {
     userMock = sinon.mock(new UserModel({
@@ -13,41 +13,26 @@ describe('Users API Calls', () => {
       familyName: 'Doe'
     }))
     user = userMock.object
-    sandbox.stub(UserModel, 'findById').resolves()
+    sandbox.stub(UserModel, 'findById')
   })
 
-  it('Welcome message test', () => {})
-
-  /**
-   * Test the /GET all users route
-  */
-  it.skip('it should GET all the users', () => {
+  it.skip('it should GET all the users', (done) => {
+    UserModel.findById.resolves(userMock)
+    userController.userDetails({ params: { id: 'John.Doe@gmail.com' } })
     expect(UserModel.findById).to.have.been.calledOnce()
-    expect(UserModel.findById).to.have.been.calledWith({
-      email: 'John.Doe@gmail.com',
-      givenName: 'John',
-      familyName: 'Doe'
-    })
+    expect(UserModel.findById).to.have.been.calledWith('John.Doe@gmail.com')
   })
 
-  /**
-   * Test the /POST route
-  */
-  it.skip('it should POST a user', () => {
-    let req = { body: { email: 'John.Doe@gmail.com', givenName: 'John', familyName: 'Doe' } }
-    let res = {}
-
-    userMock.expects('save').yields(null, user)
-    user.save({ req, res }, (err, result) => {
-      userMock.verify()
-      userMock.restore()
-      expect(result).to.be.equal(user)
-    })
+  it.skip('it should create a user', (done) => {
+    // takes some time and returns a promise
+    user.save()
+      .then(() => {
+        // if user is saved to db it is not new
+        assert(!user.isNew)
+        done()
+      })
   })
 
-  /**
-   * Test the /GET/:id route
-  */
   it.skip('it should GET a user by the given id', () => {
     // we expect the findOne method with argument _id and returns the result as note
     userMock.expects('findOne').withArgs({ _id: 1234 }).yields(null, user)
@@ -62,9 +47,6 @@ describe('Users API Calls', () => {
 
   it('user not saved and throws error')
 
-  /**
-   * Test the /PUT/:id route
-  */
   it.skip('it should UPDATE a user given the id', () => {
     userMock.expects('save').withArgs({ _id: 1234 }).yields(null, 'user')
 
@@ -74,9 +56,6 @@ describe('Users API Calls', () => {
     })
   })
 
-  /**
-   * Test the /DELETE/:id route
-  */
   it.skip('it should DELETE a user given the id', () => {
     userMock.expects('remove').withArgs({ _id: 1234 }).yields(null, 'Delete')
     user.remove({ _id: 1234 }, (err, result) => {
