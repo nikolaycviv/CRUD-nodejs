@@ -16,8 +16,8 @@
   "author": "Nikolay Ivanov",
   "license": "UNLICENSED",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
     "mongoose": "^5.5.12",
     "mongoose-unique-validator": "^2.0.3",
     "nodemon": "^1.19.1"
